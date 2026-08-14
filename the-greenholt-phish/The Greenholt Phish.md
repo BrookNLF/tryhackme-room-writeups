@@ -15,7 +15,8 @@ A sales executive at Greenholt PLC gets an email that looks like it's from a kno
 
 The lab machine has a file called `challenge.eml` sitting on the desktop. Opened it in Thunderbird.
 
-*(screenshot: email opened in Thunderbird)*
+<img width="1266" height="831" alt="Zrzut ekranu 2026-08-14 135018" src="https://github.com/user-attachments/assets/74cb187c-1abc-4169-8124-01d61974e93f" />
+
 
 A few things jumped out straight away:
 
@@ -45,57 +46,103 @@ This is bad because it means the email wasn't sent from a server that's actually
 
 From here it's a case of pulling artifacts out of the headers and the attachment, one question at a time.
 
-**Transfer Reference Number (from the Subject line):** `09674321`
+---
 
-**Sender display name:** Mr. James Jackson
+**Question 1:** What is the 'Transfer Reference Number' listed in the email's Subject line?
 
-**Sender's email address:** info@mutawamarine.com
+**Answer:** `09674321`
 
-**Reply-to address:** info.mutawamarine@mail.com
+---
 
-**Originating IP address**, from the message source:
+**Question 2:** What is the display name of the sender?
 
-*(screenshot: originating IP in headers)*
+**Answer:** Mr. James Jackson
 
-`192.119.71.157`
+---
 
-**Owner of that IP** - ran it through [ipinfo.io](https://ipinfo.io). The ASN field gives the answer:
+**Question 3:** What is the sender's email address?
 
-*(screenshot: ipinfo.io result)*
+**Answer:** info@mutawamarine.com
 
-**HostPapa**
+---
 
-**SPF record for the Return-Path domain** - used the [SPF Checker and Validator by dmarcian](https://dmarcian.com/spf-survey/), put in `mutawamarine.com`, clicked Survey Domain:
+**Question 4:** What email address will receive a reply to this email?
 
-`v=spf1 include:spf.protection.outlook.com -all`
+**Answer:** info.mutawamarine@mail.com
 
-**DMARC record for the same domain** - same site, [DMARC Inspector](https://dmarcian.com/dmarc-inspector/) tool this time:
+---
 
-`v=DMARC1; p=quarantine; fo=1`
+**Question 5:** Begin analyzing the message source. What is the originating IP address of this email?
+<img width="1045" height="509" alt="Zrzut ekranu 2026-08-14 140026" src="https://github.com/user-attachments/assets/dff86103-59a8-47b3-8180-c7c8bc9744f0" />
 
-**Attachment file name:** `SWT_#09674321____PDF__.CAB`
+**Answer:** `192.119.71.157`
 
-**SHA256 hash of the attachment** - downloaded it to the lab machine desktop and ran:
+---
+
+**Question 6:** Investigate the IP address from the previous question. Who is the owner of the originating IP?
+
+To check this, I needed to open up an external tool - this time it's a website called [ipinfo.io](https://ipinfo.io/192.119.71.157?lookup_source=search-bar). After running the IP from the previous question through that tool, the answer is shown in the ASN field.
+<img width="641" height="703" alt="Zrzut ekranu 2026-08-14 140344" src="https://github.com/user-attachments/assets/d3ff4032-60a6-4bce-b3d5-aeb978affac1" />
+
+**Answer:** HostPapa
+
+---
+
+**Question 7:** Run an SPF record check on the Return-Path domain identified in the email headers. What is the full SPF record for this domain?
+
+To do that, I needed to once again use an external tool - this time the [SPF Checker and Validator by dmarcian](https://dmarcian.com/spf-survey/). After putting in `mutawamarine.com` and clicking the Survey Domain button, the tool gave the answer.
+
+**Answer:** `v=spf1 include:spf.protection.outlook.com -all`
+
+---
+
+**Question 8:** Perform a DMARC lookup for the Return-Path domain found in the email headers. What is the complete DMARC record for this domain?
+
+To do that, I needed to use a different tool on the same site - this time the [DMARC Inspector](https://dmarcian.com/dmarc-inspector/).
+
+**Answer:** `v=DMARC1; p=quarantine; fo=1`
+
+---
+
+**Question 9:** What is the file name of the attachment found in the email?
+
+**Answer:** `SWT_#09674321____PDF__.CAB`
+
+---
+
+**Question 10:** Download the attachment to your virtual environment. Using the sha256sum command, what is the SHA256 hash of the file?
+
+This one's simple - gotta download the file (in my case I saved it on the lab machine desktop), and input:
 
 ```
 sha256sum '/home/ubuntu/Desktop/SWT_#09674321____PDF__.CAB'
 ```
 
-`2e91c533615a9bb8929ac4bb76707b2444597ce063d84a4b33525e25074fff3f`
+The output is the SHA256 hash.
 
-**Attachment size** - dropped the hash into VirusTotal, size shown at the top:
+**Answer:** `2e91c533615a9bb8929ac4bb76707b2444597ce063d84a4b33525e25074fff3f`
 
-*(screenshot: VirusTotal result)*
+---
 
-**400.26 KB**
+**Question 11:** Investigate the file hash from the previous question using VirusTotal. What is the attachment's file size in KB (e.g., 122.31 KB)?
 
-**Actual file type of the attachment** - also from VirusTotal's analysis:
+Gotta copy the SHA256 hash into VirusTotal, and it gives the answer at the very top.
 
-*(screenshot: VirusTotal file type)*
+<img width="2502" height="280" alt="image" src="https://github.com/user-attachments/assets/2a1ce7cf-cba6-4fa5-8a19-bd0a3423836b" />
 
-**RAR**
 
-So despite the `.CAB` extension and the "PDF" sitting in the filename, this is actually a RAR archive - one more sign the sender was trying to disguise what the attachment really is.
+**Answer:** `400.26 KB`
+
+---
+
+**Question 12:** Continue your research on the file. What is the actual file type of the attachment?
+
+<img width="2502" height="280" alt="image" src="https://github.com/user-attachments/assets/fb8b7eb7-c0c1-4f37-997a-6a22eb59ccd0" />
+
+
+**Answer:** RAR
+
+Despite the `.CAB` extension and the "PDF" sitting in the filename, this is actually a RAR archive - one more sign the sender was trying to disguise what the attachment really is.
 
 ## Lessons Learned
 
