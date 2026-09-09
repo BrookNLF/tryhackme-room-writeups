@@ -10,6 +10,23 @@
 
 A pure OSINT room, no exploitation involved. You're a postal worker who finds a damaged, undeliverable letter - a torn newspaper clipping and a handwritten note. The goal is to piece together enough clues to figure out the postal code on the envelope, then dig further to identify the full name and age of the person mentioned in the note.
 
+<img width="1021" height="397" alt="Newspaper_clipping" src="https://github.com/user-attachments/assets/d0fd6450-2bec-41a3-abe4-23d02944cdee" />
+<img width="1448" height="1086" alt="letter" src="https://github.com/user-attachments/assets/240cb09b-10bf-4877-97d1-bc7126e8e3e7" />
+
+### Contents of the letter
+```
+Mon cher Édouard,
+
+Aujourd'hui, en rangeant le grenier chez mes grands-parents, je suis tombée sur cette vieille coupure de journal. Ton arrière-grand-père n'avait même pas l'âge de passer le permis quand il s'est distingué ce jour-là. Le benjamin de l'équipe, et certainement pas le moins courageux.
+
+Il serait si fier de te voir sur l'eau à ton tour.
+
+Avec toute mon affection,
+Audette
+```
+
+
+
 ## Walkthrough
 
 ### Step 1: Reading the note
