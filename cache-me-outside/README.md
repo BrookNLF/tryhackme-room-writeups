@@ -14,6 +14,8 @@ A retired hacker left pieces of his identity scattered across the internet. Star
 ### 1. Reading the Discord conversation
 
 Two usernames showed up: WKM1137 and JJ. There was mention of a forum that got taken down. JJ was clearly the target - he said he'd been laying low, was done with "the scene", and had gotten into hiking and cycling. He mentioned using Komoot to log and plan routes, and dropped a link to his profile.
+<img width="945" height="610" alt="image" src="https://github.com/user-attachments/assets/ff7b4954-e77f-4982-bfa2-066b278a9215" />
+
 
 ### 2. Komoot profile
 
@@ -21,23 +23,37 @@ The [Komoot link](https://www.komoot.com/pl-pl/user/5667624959835) led straight 
 
 Logging into my own Komoot account to dig further was a dead end.
 
+At this point I noted he'd mentioned his own company - figured that might be worth connecting to a company name later, but decided to focus on the GitHub link first since it was the most direct lead.
+
 ### 3. GitHub -> email address
 
-His GitHub bio named the company "Jim Lee Security Consulting". His profile repo had a README with 1 commit. Opening that commit, then adding `.patch` to the end of the commit URL, dumped the raw patch - which exposed his email in plain text: `jimleepro1@gmail.com`, answering question 2.
+His GitHub bio named the company "Jim Lee Security Consulting" - that confirmed the company lead from the Komoot bio. His profile repo had a README with 1 commit. From my recruiter days I remembered a trick for pulling the email address behind a commit: I opened the commit, clicked "View Commit Details", then added `.patch` to the end of the URL to get the raw patch source. That dumped his email in plain text: `jimleepro1@gmail.com`, answering question 2.
 
-### 4. Instagram -> shopfront -> city
+### 4. Instagram - a hard one
 
-Googling the GitHub handle "jiml33t" turned up an Instagram account with no photos and no useful follows, but the bio linked a Threads account. A photo on Threads showed a shopfront reading **IRIGATII.RO**, a Romanian shop selling irrigation gear (sprinklers, pumps).
+The phone number gave me the most trouble, so I went back to basic googling. Searching "jiml33t" turned up an Instagram account - no pictures, not tagged in anything, and not following anyone useful. But the bio linked a Threads account, so I followed that next.
 
-Googling that shop name led straight to their website. Since they only had a single physical location in Romania, their contact page gave a full address with no ambiguity: Calea Buziașului 13, 300701 Timișoara, Romania - answering question 3, the city.
+### 5. Threads -> shopfront -> city
 
-### 5. Phone number
+A photo on his Threads showed a shopfront reading **IRIGATII.RO**, a Romanian shop selling irrigation gear (sprinklers, pumps).
+<img width="945" height="749" alt="image" src="https://github.com/user-attachments/assets/12ccb513-ce20-4f1b-a764-ab33cede235f" />
 
-Emailing Jim Lee at the address found in step 3 triggered an auto-reply containing his digital business card, which included his phone number - answering question 4.
 
-### 6. Tram station
+Googling that shop name led straight to their website. Since they only had a single physical location in Romania, their contact page gave a full address with no ambiguity: Calea Buziașului 13, 300701 Timișoara, Romania - answering question 3, the city - Timișoara.
+
+### 6. Phone number - going back to the start
+
+With the phone number still unsolved, I circled back to the "Jim Lee Security Consulting" company name, but nothing new turned up there. So I decided to try my luck and just emailed Jim Lee directly at the address from step 3, with the email only saying `test`. It paid off - I got an automatic reply back with his digital business card attached, which had his phone number right on it, answering question 4.
+<img width="661" height="316" alt="image" src="https://github.com/user-attachments/assets/7e5cfdff-97a1-4a9b-86ba-ff7b12185c79" />
+
+
+### 7. Tram station
 
 Checking the shop's street, Calea Buziașului, on Google Maps and then searching "calea buziasului timisoara tram station" surfaced the nearest stop, which matched the mapped location: **Piața Gheorghe Domășneanu**.
+<img width="945" height="860" alt="image" src="https://github.com/user-attachments/assets/648eea3d-5f8c-43db-8531-2a77bc8ca0b4" />
+
+
+And voila, there you have it - Jim Lee, found.
 
 ## Answers
 
@@ -46,7 +62,7 @@ Checking the shop's street, Calea Buziașului, on Google Maps and then searching
 | Full name | Jim Lee |
 | Email address | jimleepro1@gmail.com |
 | Phone number | +40 743 321 239 |
-| City | Timișoara |
+| City | Timișoara, Romania |
 | Tram station | Piața Gheorghe Domășneanu |
 
 ## Lessons Learned
