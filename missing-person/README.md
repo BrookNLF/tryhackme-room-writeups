@@ -8,6 +8,10 @@
 ## Summary
 
 A friend went on holiday in 2025, shared a couple of photos, and then went quiet. The task was to track him down using nothing but the pictures and some OSINT skills - reverse image search, googling, and checking photo metadata.
+<img width="960" height="540" alt="MotoGP" src="https://github.com/user-attachments/assets/5285e8e8-d7cf-4ab5-98c2-f8f7dcc09ec8" />
+<img width="1360" height="765" alt="food" src="https://github.com/user-attachments/assets/5cc12fe0-763d-4142-92ac-4285de9a6f61" />
+
+
 
 ## Walkthrough
 
