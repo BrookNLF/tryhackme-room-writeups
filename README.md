@@ -43,7 +43,12 @@ I'm Kamil "Brook" Ryncarz - currently an IT recruiter, actively studying and bui
 
 | Room | Category | Difficulty | Writeup |
 |---|---|---|---|
-| _more coming soon_ | | | |
+| Pickle Rick | Web Exploitation | Easy | [pickle-rick](./pickle-rick) |
+| Letter | OSINT | Easy | [letter](./letter) |
+| Missing Person | OSINT | Easy | [missing-person](./missing-person) |
+| Sakura | OSINT | Easy | [sakura](./sakura) |
+| Cache Me Outside | OSINT | Medium | [cache-me-outside](./cache-me-outside) |
+| The Greenholt Phish | Phishing Analysis | Easy | [the-greenholt-phish](./the-greenholt-phish) |
 
 This table gets a new row every time a room writeup is added.
 
