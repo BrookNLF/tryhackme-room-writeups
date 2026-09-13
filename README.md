@@ -24,7 +24,7 @@
 
 <h1 align="center">TryHackMe Room Writeups</h1>
 
-Writeups from individual TryHackMe rooms I've worked through as part of my transition into cybersecurity (blue team / security engineer track).
+Writeups from individual TryHackMe rooms I've worked through.
 
 > Looking for my Hacker Holidays 2026 writeups? Those live in a separate repo: [THM-HackerHolidays-2026](https://github.com/BrookNLF/THM-HackerHolidays-2026).
 
@@ -32,7 +32,7 @@ Writeups from individual TryHackMe rooms I've worked through as part of my trans
 
 ## About Me
 
-I'm Kamil "Brook" Ryncarz - currently an IT recruiter, actively studying and building hands-on skills to move into a blue team / security engineer role. I've been learning intensively since June 2026, and I post a writeup for most rooms I complete so I have a running record of what I've learned and can show real work, not just certificates.
+I'm Kamil "Brook" Ryncarz - currently an IT recruiter, actively studying and building hands-on skills for a blue team / security engineer role. I've been learning intensively since June 2026, and I post a writeup for most rooms I complete so I have a running record of what I've learned and can show real work, not just certificates.
 
 - GitHub: [@BrookNLF](https://github.com/BrookNLF)
 - TryHackMe: [BrookGG](https://tryhackme.com/p/BrookGG)
@@ -47,6 +47,7 @@ I'm Kamil "Brook" Ryncarz - currently an IT recruiter, actively studying and bui
 | Letter | OSINT | Easy | [letter](./letter) |
 | Missing Person | OSINT | Easy | [missing-person](./missing-person) |
 | Sakura | OSINT | Easy | [sakura](./sakura) |
+| Digital Footprint | OSINT | Easy | [digital-footprint](./digital-footprint) |
 | Cache Me Outside | OSINT | Medium | [cache-me-outside](./cache-me-outside) |
 | The Greenholt Phish | Phishing Analysis | Easy | [the-greenholt-phish](./the-greenholt-phish) |
 
