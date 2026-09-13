@@ -2,7 +2,7 @@
 
 <p align="center"><i>Kamil Ryncarz</i></p>
 
-<h3 align="center">IT Recruiter → Blue Team · SOC Analyst Track · Daily CTF Writeups</h3>
+<h3 align="center">Blue Team · SOC Analyst Track · Daily CTF Writeups</h3>
 
 <p align="center">
   <a href="https://www.linkedin.com/in/kamil-ryncarz/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"></a>
