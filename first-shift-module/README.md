@@ -10,7 +10,7 @@ Revisit the First Shift CTF from winter 2026 through six hands-on challenges pre
 
 | # | Room | Category |
 |---|------|----------|
-| 1 | [Just a VPN Login](./room-01-just-a-vpn-login/) | |
+| 1 | [Just a VPN Login](./room-01-just-a-vpn-login/) | CTI |
 | 2 | [Portal Drop](./room-02-portal-drop/) | |
 | 3 | [Phishing Books](./room-03-phishing-books/) | |
 | 4 | [The Crown Jewel](./room-04-the-crown-jewel/) | |
