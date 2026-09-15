@@ -16,14 +16,13 @@ An internal SOC alert flags a VPN login for susan.martin@probablyfine.thm from S
 
 Paste the IP from the room description (`37.19.201.132`) into TryDetectThis.
 
-[insert screenshot placeholder]
+<img width="694" height="147" alt="image" src="https://github.com/user-attachments/assets/6790a68c-342a-4296-89e1-945761ac7eef" />
 
 **Answer:** `212238`
 
 ### Step 2: Which service is offered from this IP?
 
 No lookup needed here, the answer is already in the room description: "Unusual VPN login... from 37.19.201.132".
-
 **Answer:** `vpn`
 
 ### Step 3: What is the filename of the file related to the hash?
@@ -33,7 +32,7 @@ Paste the hash from the room description into TryDetectThis:
 
 Check File Details -> File Name.
 
-[insert screenshot placeholder]
+<img width="356" height="217" alt="image" src="https://github.com/user-attachments/assets/ab8b1408-7797-4c19-bebd-b21bd2e6de12" />
 
 **Answer:** `zY9sqWs.exe`
 
@@ -41,7 +40,7 @@ Check File Details -> File Name.
 
 Scroll to Vendor Analysis and search (Ctrl+F) for Microsoft.
 
-[insert screenshot placeholder]
+<img width="945" height="258" alt="image" src="https://github.com/user-attachments/assets/87bf7499-aa3f-4af6-84da-7c66cba8d678" />
 
 **Answer:** `Trojan:Win32/LummaStealer.PM!MTB`
 
@@ -49,7 +48,11 @@ Scroll to Vendor Analysis and search (Ctrl+F) for Microsoft.
 
 Under File Communicated Behavior -> Contacted Domains, there are 3 domains with detections. Checking each one individually in TryDetectThis, `gadgethgfub.icu` is the one with real results. Its certificate listed a large number of alternative names, so I pasted the full list into Claude and had it count them.
 
-[insert screenshot placeholder]
+<img width="945" height="583" alt="image" src="https://github.com/user-attachments/assets/eb43607c-5f8e-47a8-9ed2-0dabba4eb90b" />
+
+<img width="945" height="933" alt="image" src="https://github.com/user-attachments/assets/eb156b26-8cd0-44c4-a6a2-2a25987bb6b9" />
+
+<img width="945" height="774" alt="image" src="https://github.com/user-attachments/assets/3e1a5a52-a8cd-48d5-82cc-22c2ef488565" />
 
 **Answer:** `151`
 
@@ -58,10 +61,11 @@ Under File Communicated Behavior -> Contacted Domains, there are 3 domains with 
 Back on the hash overview, under Detections and Reports there's a rule called Lumma by kevoreilly, linking to GitHub:
 [kevoreilly/CAPEv2 - Lumma.yar](https://github.com/kevoreilly/CAPEv2/blob/master/data/yara/CAPE/Lumma.yar)
 
+<img width="904" height="374" alt="image" src="https://github.com/user-attachments/assets/94570a86-af28-416c-8c76-0c64cfe3ce4a" />
+
 The condition field is the last line of the rule.
 
-[insert screenshot placeholder]
-[insert screenshot placeholder]
+<img width="945" height="509" alt="image" src="https://github.com/user-attachments/assets/6b43de0d-9a63-4cf7-9700-d09771799bb7" />
 
 **Answer:** `uint16(0) == 0x5a4d and any of them`
 
@@ -69,7 +73,7 @@ The condition field is the last line of the rule.
 
 Same Detections and Reports section, under the Reports tab.
 
-[insert screenshot placeholder]
+<img width="945" height="274" alt="image" src="https://github.com/user-attachments/assets/276bc513-b651-4e77-9d09-cb44da4c52a7" />
 
 **Answer:** `Behind the Curtain: How Lumma Affiliates Operate`
 
@@ -79,7 +83,7 @@ Report link: [recordedfuture.com - Behind the Curtain: How Lumma Affiliates Oper
 
 Ctrl+F through the report.
 
-[insert screenshot placeholder]
+<img width="945" height="201" alt="image" src="https://github.com/user-attachments/assets/7b5662b4-1ad5-40e5-aa64-b7fa3e49a01f" />
 
 **Answer:** `GhostSocks`
 
@@ -87,7 +91,7 @@ Ctrl+F through the report.
 
 Ctrl+F for "Android" in the report.
 
-[insert screenshot placeholder]
+<img width="945" height="159" alt="image" src="https://github.com/user-attachments/assets/ce755515-a9e6-4203-890c-e1f02552dfea" />
 
 **Answer:** `CraxsRAT`
 
@@ -95,7 +99,7 @@ Ctrl+F for "Android" in the report.
 
 Scroll to Appendix C - MITRE ATT&CK Techniques table at the bottom, looking for the VPN-related entry.
 
-[insert screenshot placeholder]
+<img width="945" height="617" alt="image" src="https://github.com/user-attachments/assets/080c3621-aad1-479c-b7f3-9dd41c05b83c" />
 
 **Answer:** `T1583.003` (Resource Development: Acquire Infrastructure: Virtual Private Server)
 
