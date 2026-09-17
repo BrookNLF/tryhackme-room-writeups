@@ -21,7 +21,8 @@ The email had SPF, DKIM, and DMARC all set to `none`. DMARC is the one that matt
 
 So SPF=none and DKIM=none just mean those individual checks failed or weren't present. On their own, that doesn't block anything. `DMARC=none` means there was no DMARC policy telling the mail platform to take action on those failures, so it just delivered the email normally. DMARC is the control point, SPF/DKIM are just inputs to it.
 
-*[insert image]*
+<img width="945" height="616" alt="image" src="https://github.com/user-attachments/assets/a459c98e-802a-4362-a571-e7f545df34bc" />
+
 
 **Answer:** `DMARC=none`
 
@@ -36,7 +37,8 @@ To:   isabella@kingford.ac.uk
 
 That's when it clicked - `kinglord.ac.uk` vs `kingford.ac.uk`. The letters are swapped (`kinglord` instead of `kingford`), close enough that it slips past a quick read but different once you actually compare the two side by side. Registering a domain that's deliberately one or two letters off from the real one, betting the victim won't notice, is exactly what `typosquatting` is - so that's how I landed on the answer.
 
-*[insert image]*
+<img width="378" height="117" alt="image" src="https://github.com/user-attachments/assets/41ac91f8-1310-4db1-bb1d-2313075c8c8e" />
+
 
 **Answer:** `Typosquatting`
 
@@ -44,15 +46,14 @@ That's when it clicked - `kinglord.ac.uk` vs `kingford.ac.uk`. The letters are s
 
 Searched "typosquatting mitre att&ck" - first result was Acquire Infrastructure: Domains.
 
-*[image placeholder]*
-
 **Answer:** `T1583.001`
 
 ### Q4 - What is the file extension of the attached file?
 
 The attachment was named `library-invoice.pdf.html` - made to look like a PDF at a glance, but it's actually HTML.
 
-*[insert image placeholder]*
+<img width="539" height="98" alt="image" src="https://github.com/user-attachments/assets/8869cbf7-8d22-4276-ba6e-17c57ae93b77" />
+
 
 **Answer:** `.html`
 
@@ -60,7 +61,8 @@ The attachment was named `library-invoice.pdf.html` - made to look like a PDF at
 
 Found via the MD5 Scan (VirusTotal) link inside `EML-Analysis-Report.html`.
 
-*[insert image]*
+<img width="945" height="536" alt="image" src="https://github.com/user-attachments/assets/c6207ba7-4bc9-4dce-8252-c1b369e88264" />
+
 
 **Answer:** `442f2965cb6e9147da7908bb4eb73a72`
 
@@ -68,7 +70,8 @@ Found via the MD5 Scan (VirusTotal) link inside `EML-Analysis-Report.html`.
 
 Honestly, I'm a bit embarrassed about how easy this one was and how complicated I made it out to be. All I had to do was download the attachment to the desktop and open it - the browser lands you straight on the answer.
 
-*[insert image]*
+<img width="945" height="133" alt="image" src="https://github.com/user-attachments/assets/15319008-d090-478c-aae9-6e6fbf380127" />
+
 
 **Answer:** `http://lib-service.com:8083/`
 
@@ -76,17 +79,17 @@ Honestly, I'm a bit embarrassed about how easy this one was and how complicated 
 
 Opened the attachment in nano - the HTML contained two JS arrays plus some logic to decode them. That's obfuscation of content within a file, which is exactly what `T1027` covers. Worth noting this is distinct from `T1566.001` (Phishing: Spearphishing Attachment, the delivery method) or `T1204.002` (User Execution: Malicious File, Isabella opening it) - T1027 is specifically about the obfuscation trick baked into the file itself.
 
+<img width="945" height="678" alt="image" src="https://github.com/user-attachments/assets/0ba518ab-6a99-4e69-b8cd-d01ba5c1565a" />
+
 **Answer:** `T1027`
 
 ### Q8 - What is the hidden message the attacker left in the file?
 
 Opened the attachment in nano (same file as Q7) and saw two arrays full of `\uXXXX` sequences. I didn't recognise the format straight away, so I googled it and found out these were Unicode escape codes for individual characters - basically letters written as their character codes instead of plain text.
 
-*[insert image]*
-
 Once I knew what I was looking at, I figured the arrays just needed joining together and then reversing to become readable (the reversing part I worked out by noticing the strings looked backwards even after converting the escapes). CyberChef was the perfect tool for that - pasted the array contents in, joined them, reversed them, and one of the two arrays clearly spelled out a message.
 
-*[insert image]*
+<img width="945" height="617" alt="image" src="https://github.com/user-attachments/assets/d816682d-8810-4b73-a694-69ae3bf3b788" />
 
 **Answer:** `I love to phish books from libraries ^^`
 
@@ -94,7 +97,10 @@ Once I knew what I was looking at, I figured the arrays just needed joining toge
 
 Looking at the code from Q8, I could see there was a line assembling the final `src` value, but I wasn't actually sure what it was doing under the hood - `.split("").reverse().join("")` isn't something I immediately understood. Rather than guess, I put the line into AI and asked it to explain what it does step by step.
 
-*[insert image]*
+<img width="945" height="179" alt="image" src="https://github.com/user-attachments/assets/8f967bae-6b43-437a-8b82-a785fd89a965" />
+
+<img width="945" height="369" alt="image" src="https://github.com/user-attachments/assets/1f9462fe-0c7f-484f-84a8-036f39bdfa81" />
+
 
 That's how I learned the URL had been stored backwards on purpose, like writing "library" as "yrarbil", so it wouldn't be obvious to anyone reading the raw code. This line takes that backwards text, splits it into single characters, flips their order, and glues them back together - spelling it correctly again. `src` ends up holding the real, readable URL the attacker wanted the browser to jump to.
 
@@ -116,7 +122,8 @@ That gave a proper first-load request, and the answer was sitting in the Request
 - The `xn--...` string is **punycode** - the ASCII-safe way browsers encode domains that contain non-ASCII characters. Decoding `xn--librarytlu-13cwe32432-kwr` gives back `lіibrarytlu-13cwe32432` - same domain we already decoded from the JS, just in a different notation. One character in there isn't a real Latin "i" - it's a Cyrillic "і" (`\u0456`), the same homoglyph trick as the typosquatting in Q2/Q3, just applied to the actual landing domain this time.
 - Browsers deliberately render mixed-script domains (Latin + Cyrillic here) as raw punycode instead of pretty Unicode text in the address bar, specifically so a homoglyph swap like this doesn't render as an innocent-looking domain name. That's why the `xn--` form is what you actually see on the wire and in headers, even though the JS source decodes to the "readable" Unicode version.
 
-*[image placeholder]*
+<img width="945" height="562" alt="image" src="https://github.com/user-attachments/assets/ff3a8c56-1a11-4a18-a074-ca818fd45fbd" />
+
 
 **Answer:** `http://xn--librarytlu-13cwe32432-kwr.com:8082/`
 
@@ -124,7 +131,8 @@ That gave a proper first-load request, and the answer was sitting in the Request
 
 Submitted the URL to TryDetectThis (this room's VirusTotal equivalent) first with no luck. Stripping it down to just the bare domain (`lib-service.com`, no `http://`) got a hit straight away.
 
-*[insert image]*
+<img width="945" height="387" alt="image" src="https://github.com/user-attachments/assets/7c109cc3-1991-4ce6-8d61-70fc9d6f2c7e" />
+
 
 **Answer:** `Cobalt Dickens / Silent Librarian`
 
