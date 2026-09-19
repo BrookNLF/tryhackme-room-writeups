@@ -1,9 +1,9 @@
 # The Crown Jewel - TryHackMe Writeup
 
-Room: https://tryhackme.com/room/thecrownjewel
-Type: Splunk / PCAP analysis
-Difficulty: Easy
-Completed: 19th of September 2026
+- **Room:** [The Crown Jewel](https://tryhackme.com/room/thecrownjewel)
+- **Type:** Splunk / PCAP analysis
+- **Difficulty:** Easy
+- **Completed:** 19th of September 2026
 
 ## Scenario
 
@@ -21,7 +21,10 @@ This question needed me to follow the tip from the room description and filter f
 index=network_logs log_type=ids "event.msg"="Reverse Shell Outbound Connection Detected"
 ```
 
-[insert screenshot]
+<img width="1166" height="839" alt="image" src="https://github.com/user-attachments/assets/d1633b9e-0f62-47af-8c0e-d058b5b5960a" />
+
+<img width="945" height="721" alt="image" src="https://github.com/user-attachments/assets/f5aebf3d-843e-4c68-a30f-50e7d62c2e2c" />
+
 
 The source IP of the alert is in the `src_ip` field.
 
@@ -48,7 +51,8 @@ index=network_logs
 
 There was an `arp` type with 90 events.
 
-[insert screenshot]
+<img width="945" height="333" alt="image" src="https://github.com/user-attachments/assets/c27b3604-70af-4217-bf18-ccbc4919de0e" />
+
 
 Then I looked at a few ARP events and expanded them to see the fields:
 
@@ -59,7 +63,8 @@ index=network_logs log_type=arp
 
 In the 2nd event, `sender_ip` was `10.10.10.1` with `sender_mac` `00:0c:29:11:22:33`. That was a bit lucky, because `head 3` only shows the first 3 events.
 
-[insert screenshot]
+<img width="825" height="645" alt="image" src="https://github.com/user-attachments/assets/78cd0a06-3171-49c6-ace3-f9b56ccebe83" />
+
 
 To check it properly, I filtered on the gateway IP and counted the MACs:
 
@@ -70,7 +75,8 @@ index=network_logs log_type=arp event.sender_ip="10.10.10.1"
 
 I expected two MACs (the real gateway and the fake one), but only one came back, with 45 events. The event was also an unsolicited broadcast (`is-at` to `ff:ff:ff:ff:ff:ff`), which is typical for ARP spoofing.
 
-[insert screenshot]
+<img width="945" height="235" alt="image" src="https://github.com/user-attachments/assets/8625ca5b-6511-410c-9a83-5e87dcf66dc1" />
+
 
 Answer: `00:0c:29:11:22:33`
 
@@ -80,7 +86,8 @@ Answer: `00:0c:29:11:22:33`
 
 I went back to the base query `index=network_logs`. In the second event I saw `host: jira`, so I used "Add to search" on it and Splunk added it to my query (with an `spath`). I then expanded a random event to find the name of the User-Agent field. It was called `agent`.
 
-[insert screenshot]
+<img width="945" height="600" alt="image" src="https://github.com/user-attachments/assets/f411cfbc-b6d5-4579-82a3-d674fffd1b24" />
+
 
 My first idea was to make a `table` of the agents, but that would list every single event. I also wrongly assumed the field only existed in `log_type=http`. My query returned 0 results at first, because Splunk's own `host` field is `lab`, and the `host: jira` from the log is a different field. Splunk had already extracted it as `extracted_host`.
 
@@ -94,7 +101,8 @@ index=network_logs extracted_host=jira
 
 Six agents came back. Five were common browsers or tools with 335-393 requests each. One had a single request and an obvious exploit name.
 
-[insert screenshot]
+<img width="945" height="367" alt="image" src="https://github.com/user-attachments/assets/c5d82100-8737-4b3d-9585-09752590adea" />
+
 
 Answer: `CVE-202X-EXPLOIT`
 
@@ -118,7 +126,8 @@ index=network_logs POST
 
 It was a normal POST to `/static/js/app.js`, with no field for the request body.
 
-[insert screenshot]
+<img width="945" height="554" alt="image" src="https://github.com/user-attachments/assets/cafb6334-9edc-4072-ba3d-19864aa3b060" />
+
 
 Next I grouped the POSTs by URI:
 
@@ -127,6 +136,9 @@ index=network_logs POST
 | stats count by event.uri
 | sort count
 ```
+
+<img width="945" height="494" alt="image" src="https://github.com/user-attachments/assets/c74fa847-0fe2-44cb-b4ea-e587176d05a7" />
+
 
 The rarest one was `/vulnerable_endpoint?cmd=RCE`, which is an exploit attempt, not the creds. `/login` looked like a good suspect, but Splunk only had the metadata for it, not the body.
 
@@ -144,7 +156,9 @@ http.request.method == "POST"
 
 Only one packet came back: a POST to `/login.php`. In the packet details (and also in Follow TCP Stream), under **HTML Form URL Encoded**, I could see the username and password. The raw payload is also visible in the bytes pane.
 
-[insert screenshot]
+<img width="945" height="487" alt="image" src="https://github.com/user-attachments/assets/38026437-97cd-4619-a284-a9bc2716e3e2" />
+
+<img width="945" height="669" alt="image" src="https://github.com/user-attachments/assets/516f8f17-1f76-4346-af2f-32c6a3bf82aa" />
 
 The destination MAC of this packet was `00:0c:29:11:22:33`, the same MAC that impersonated the gateway in Q3. So the victim sent its creds straight to the attacker.
 
@@ -156,7 +170,8 @@ Answer: `username=dev_user&password=SecretPassword!`
 
 Data exfiltration often hides in DNS. Attackers put the stolen data into long subdomains, like `abc123.evil.com`. The `dns` log type had 1733 events, so I started there. I expanded one event and found that the queried domain is in the `query` field, so in Splunk it is `event.query`. This one was normal (`www.google.com`).
 
-[insert screenshot]
+<img width="945" height="521" alt="image" src="https://github.com/user-attachments/assets/d7e316c7-f9f6-4823-8f4d-c452393d8e69" />
+
 
 Next I counted every queried domain and sorted from rarest to most common:
 
@@ -168,7 +183,8 @@ index=network_logs log_type=dns
 
 There were 510 different queries. The top rows were all long, random-looking subdomains of the same domain, each seen only once. Normal domains get looked up many times, so this stood out.
 
-[insert screenshot]
+<img width="945" height="483" alt="image" src="https://github.com/user-attachments/assets/22d96fb5-11b0-4c66-b371-2bd3a506601b" />
+
 
 Answer: `exfil-domain.xyz`
 
@@ -178,13 +194,11 @@ Answer: `exfil-domain.xyz`
 
 I found this one while solving Q7. The attacker's domain `exfil-domain.xyz` showed up in the `dns` log type, in lots of long, random subdomains that each appeared only once. That is a typical sign of DNS tunnelling, where stolen data is encoded into the domain name and sent out with normal-looking DNS queries.
 
-[insert screenshot]
-
 Answer: `DNS`
 
 ---
 
-## Summary
+## Lessons Learned
 
 - Before writing a new query, expand the event and read all its fields. In Q2 the answer was already in the alert from Q1.
 - Filter in the query instead of scrolling through events. Using head 3 in Q3 worked only because I got lucky.
