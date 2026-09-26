@@ -27,7 +27,8 @@ The main tool is **TryDetectThis2.0**, a threat intelligence search app on the l
 
 First I started the Lab Machine and launched TryDetectThis2.0 from the desktop. Then I pasted the flagged hash from the room description into the search bar. The file name showed up right at the top of the results.
 
-[insert screenshot]
+<img width="945" height="476" alt="image" src="https://github.com/user-attachments/assets/e724e186-61d3-4458-a609-27c7b15e49b1" />
+
 
 Answer: `syshelpers.exe`
 
@@ -37,7 +38,8 @@ Answer: `syshelpers.exe`
 
 I found this one in the **Details** tab.
 
-[insert screenshot]
+<img width="867" height="928" alt="image" src="https://github.com/user-attachments/assets/d8b8c116-0f59-4a0a-972e-0b68b1e16867" />
+
 
 Answer: `Win32 EXE`
 
@@ -47,7 +49,8 @@ Answer: `Win32 EXE`
 
 This is in the **Relations** tab, under **Execution Parents**.
 
-[insert screenshot]
+<img width="838" height="381" alt="image" src="https://github.com/user-attachments/assets/cca0cb20-d554-4f11-b37f-0e684dc7f387" />
+
 
 The screenshot shows two parents:
 
@@ -64,7 +67,8 @@ Answer: `361GJX7J,installer.exe`
 
 The answer is right below Execution Parents, in the same **Relations** tab.
 
-[insert screenshot]
+<img width="839" height="266" alt="image" src="https://github.com/user-attachments/assets/dc154bbd-46f1-4259-b3e5-42911c3b5b7e" />
+
 
 Answer: `AClient.exe`
 
@@ -80,8 +84,10 @@ I duplicated the browser tab first, so I wouldn't lose the results for the first
 
 In the **Relations** tab I scrolled all the way down to **Dropped Files**. There are 20 files there, but the question only asks about the malicious ones. These are marked with a yellow triangle with an exclamation mark, so they're hard to miss. The first three are right at the top, and the fourth one is a bit further down, so you need to scroll.
 
-[insert screenshot]
-[insert screenshot2]
+<img width="811" height="497" alt="image" src="https://github.com/user-attachments/assets/3776b5a0-e697-42c7-b05b-8b5900a6ed3e" />
+
+<img width="770" height="113" alt="image" src="https://github.com/user-attachments/assets/9d11354f-c5b5-4eb2-b9d0-3dab5ec2cb9d" />
+
 
 Answer: `searchhost.exe,syshelpers.exe,nat.vbs,runsys.vbs`
 
@@ -93,7 +99,8 @@ Now it was time to search for the flagged IP. In the room description it's **def
 
 This one took me a while. I went through every tab from top to bottom without finding anything obvious. Finally, while reading the comments in the **Community** tab, I spotted a name I recognised - **AsyncRAT**, a well-known remote access trojan. That turned out to be the answer.
 
-[insert screenshot]
+<img width="920" height="518" alt="image" src="https://github.com/user-attachments/assets/e2039563-4a80-4733-a678-21d7aec9bd1d" />
+
 
 Answer: `AsyncRAT`
 
@@ -111,8 +118,10 @@ I excluded medium.com, github.com and the word "writeup" on purpose. Most TryHac
 
 The first result was a direct hit:
 
-[insert screenshot]
-[insert screenshot2]
+<img width="945" height="255" alt="image" src="https://github.com/user-attachments/assets/654b73f2-baf1-4c47-96d2-18fa5b26cfcc" />
+
+<img width="945" height="629" alt="image" src="https://github.com/user-attachments/assets/bcdddb84-def2-4b2c-ae8c-b62b6c6ccf23" />
+
 
 It was a Check Point Research article. Later I also noticed that the title of this report is mentioned in the second comment in the **Community** tab from Q6 - so the clue was there all along.
 
