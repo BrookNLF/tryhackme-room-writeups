@@ -1,10 +1,10 @@
 # ItsyBitsy - TryHackMe Writeup
 
-**Room:** [ItsyBitsy](https://tryhackme.com/room/itsybitsy)
-**Path:** SOC Level 1
-**Difficulty:** Medium
-**Category** ELK Alert Triage
-**Completed:** 27th of September 2026
+- **Room:** [ItsyBitsy](https://tryhackme.com/room/itsybitsy)
+- **Path:** SOC Level 1
+- **Difficulty:** Medium
+- **Category** ELK Alert Triage
+- **Completed:** 27th of September 2026
 
 ---
 
@@ -22,7 +22,8 @@ After logging into Kibana, I first had to find my way to the logs. From the home
 
 At first Discover showed **0 results**. That's because Kibana by default only looks at a recent time range (like the last 15 minutes), and these logs are from 2022. Since the question asks about March 2022, I set the time picker to cover the whole month (1st of March 2022 - 31st of March 2022) and the events showed up.
 
-[insert screenshot]
+<img width="945" height="241" alt="image" src="https://github.com/user-attachments/assets/b8551d62-2465-4453-93af-1857edc9e8ce" />
+
 
 Answer: `1482`
 
@@ -34,7 +35,8 @@ To see which IPs show up in the logs, I clicked the **source_ip** field in the f
 
 There were only 2 IPs. One of them made up almost all of the traffic, while the other one appeared in only **0.4%** of events. An IP that stands out this much from normal traffic is worth a closer look, so this was my main suspect. Let's investigate!
 
-[insert screenshot]
+<img width="406" height="413" alt="image" src="https://github.com/user-attachments/assets/39af59fc-09ce-4afc-bdfd-638b9818b57e" />
+
 
 Answer: `192.166.65.54`
 
@@ -46,7 +48,8 @@ I filtered the logs down to the suspicious IP from Q2, which left only 2 events.
 
 I didn't know it at first, so I googled it. **bitsadmin** is a built-in Windows command-line tool for managing BITS (Background Intelligent Transfer Service) jobs - it's meant for downloading and uploading files in the background. Because it's a legitimate, signed Microsoft tool, attackers like to abuse it to download malware without raising suspicion. This technique is known as "living off the land" (LOLBin).
 
-[insert screenshot]
+<img width="2559" height="604" alt="image" src="https://github.com/user-attachments/assets/00be213c-b296-40b3-a5a5-284aae302afe" />
+
 
 Answer: `bitsadmin`
 
@@ -72,7 +75,8 @@ Answer: `pastebin.com/yTg0Ah6a`
 
 To answer this one, I had to leave Kibana and open the URL from Q5 in the browser. The paste was still up, and its name was shown at the top of the page.
 
-[insert screenshot]
+<img width="945" height="369" alt="image" src="https://github.com/user-attachments/assets/1874481a-9348-4d8b-b6ca-c94d1e3aa822" />
+
 
 Answer: `secret.txt`
 
