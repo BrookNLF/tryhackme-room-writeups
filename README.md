@@ -41,17 +41,28 @@ I'm Kamil "Brook" Ryncarz - currently an IT recruiter, actively studying and bui
 
 ## Writeup Index
 
+Newest first.
+
 | Room | Category | Difficulty | Writeup |
 |---|---|---|---|
-| Pickle Rick | Web Exploitation | Easy | [pickle-rick](./pickle-rick) |
-| Letter | OSINT | Easy | [letter](./letter) |
-| Missing Person | OSINT | Easy | [missing-person](./missing-person) |
-| Sakura | OSINT | Easy | [sakura](./sakura) |
-| Digital Footprint | OSINT | Easy | [digital-footprint](./digital-footprint) |
-| Cache Me Outside | OSINT | Medium | [cache-me-outside](./cache-me-outside) |
-| The Greenholt Phish | Phishing Analysis | Easy | [the-greenholt-phish](./the-greenholt-phish) |
-
-This table gets a new row every time a room writeup is added.
+| Boogeyman 1 | Incident Response | Medium | [boogeyman-1](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/boogeyman-1/README.md) |
+| Boogeyman 2 | Memory Forensics | Medium | [boogeyman-2](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/boogeyman-2/README.md) |
+| Boogeyman 3 | Threat Hunting | Medium | [boogeyman-3](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/boogeyman-3/README.md) |
+| Tempest | Incident Response | Medium | [tempest](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/tempest/README.md) |
+| Benign | Splunk Alert Triage | Medium | [benign](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/benign/README.md) |
+| ItsyBitsy | ELK Alert Triage | Medium | [itsy-bitsy](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/itsy-bitsy/README.md) |
+| Invite Only | Threat Analysis | Easy | [invite-only](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/invite-only/README.md) |
+| The Crown Jewel | Splunk / PCAP Analysis | Easy | [the-crown-jewel](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/first-shift-module/the-crown-jewel/README.md) |
+| Portal Drop | Log Analysis / EDR | Easy | [portal-drop](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/first-shift-module/portal-drop/README.md) |
+| Phishing Books | Phishing Analysis | Easy | [phishing-books](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/first-shift-module/phishing-books/README.md) |
+| Just a VPN Login | CTI | Easy | [just-a-vpn-login](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/first-shift-module/just-a-vpn-login/README.md) |
+| Sakura | OSINT | Easy | [sakura](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/sakura/README.md) |
+| Cache Me Outside | OSINT | Medium | [cache-me-outside](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/cache-me-outside/README.md) |
+| Missing Person | OSINT | Easy | [missing-person](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/missing-person/README.md) |
+| Digital Footprint | OSINT | Easy | [digital-footprint](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/digital-footprint/README.md) |
+| Letter | OSINT | Easy | [letter](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/letter/README.md) |
+| Pickle Rick | Web Exploitation | Easy | [pickle-rick](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/pickle-rick/README.md) |
+| The Greenholt Phish | Phishing Analysis | Easy | [the-greenholt-phish](https://github.com/BrookNLF/tryhackme-room-writeups/blob/main/the-greenholt-phish/README.md) |
 
 ---
 
